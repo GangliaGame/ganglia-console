@@ -1,0 +1,86 @@
+html, body, #root, .App {
+  height: 100%;
+}
+
+.App {
+  text-align: center;
+  /*background-color: #111;
+  color: white;*/
+  font-size: 20px;
+  /*margin-top: 50px;*/
+}
+
+.Combos {
+  margin-top: 50px;
+  height: 50px;
+  font-weight: bold;
+}
+
+.Bays {
+  /*display: flex;*/
+  /*align-content: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100%;*/
+}
+
+.Bay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.Port {
+  width: 100px;
+  height: 50px;
+  border-radius: 10px;
+  border: 3px solid black;
+  margin: 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Wire-black {
+  background-color: #444;
+}
+
+.Wire-white {
+  background-color: #aaa;
+}
+
+.Wire-pink {
+  background-color: #ef3577;
+}
+
+.Wire-blue {
+  background-color: #416ec8;
+}
+
+.Wire-none {
+  background-color: white;
+}
+
+.Port-wire-label {
+  color: white;
+  user-select: none;
+}
+
+.Port-status {
+  width: 6px;
+  height: 6px;
+  border-radius: 100%;
+  position: absolute;
+  bottom: -15px;
+  border: 1px solid black;
+}
+
+.Port-status-online {
+  background-color: #0fff0f;
+}
+
+.Port-status-offline {
+  background-color: #ff0f0f;
+}
