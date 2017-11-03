@@ -8,8 +8,8 @@ const WIRE_COLORS = ['black', 'white', 'blue', 'pink']
 const POLL_FREQUENCY = 100 // ms
 const POLL_TIMEOUT = 1500 // ms
 
-// const SERVER_URL = 'https://starship-server.herokuapp.com'
-const SERVER_URL = 'http://localhost:9000'
+const SERVER_URL = 'https://starship-server.herokuapp.com'
+// const SERVER_URL = 'http://localhost:9000'
 
 
 type timestamp = number
@@ -34,6 +34,7 @@ type AppState = {
   weaponStartTime: ?timestamp,
   weapon: ?Weapon,
   gameOver: boolean,
+  gameStarted: boolean,
   score: number,
 }
 
@@ -114,7 +115,7 @@ function WeaponStatus(props: WeaponStatusProps) {
     )
   } else {
     return (
-      <div className="WeaponStatus">WEAPON OFFLINE</div>
+      <div className="WeaponStatus">WEAPONS OFFLINE</div>
     )
   }
 
@@ -158,6 +159,13 @@ class App extends React.Component<{}, AppState> {
 
   render() {
     if (!this.state) return "loading"
+    if (!this.state.gameStarted) {
+      return (
+        <div className="GameNotStarted">
+          plug in a wire to start
+        </div>
+      )
+    }
     return (
       <div className="App">
         <WeaponStatus weaponStartTime={this.state.weaponStartTime} weapon={this.state.weapon}/>

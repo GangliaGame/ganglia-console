@@ -9,6 +9,18 @@ html, body, #root, .App {
   font-size: 20px;
   /*margin-top: 50px;*/
   overflow: hidden;
+  background-color: black;
+  color: white;
+}
+
+.GameNotStarted {
+  font-size: 40px;
+  background-color: black;
+  height: 100%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .WeaponStatus {
@@ -29,20 +41,12 @@ html, body, #root, .App {
 .WeaponStatus-duration {
   width: 400px;
   height: 20px;
-  min-width: 30px;
+  min-width: 40px;
   background-color: orange;
   border: 3px solid black;
   border-radius: 5px;
   transition: all 100ms ease-in-out;
   font-size: 18px;
-}
-
-.Bays {
-  /*display: flex;*/
-  /*align-content: center;
-  justify-content: center;
-  flex-direction: column;
-  height: 100%;*/
 }
 
 .Bay {
@@ -81,7 +85,8 @@ html, body, #root, .App {
 }
 
 .Wire-none {
-  background-color: white;
+  background-color: black;
+  border: 2px solid #aaa;
 }
 
 .Port-wire-label {
