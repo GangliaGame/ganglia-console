@@ -8,7 +8,34 @@ const WIRE_COLORS = ['black', 'white', 'blue', 'pink']
 const POLL_FREQUENCY = 100 // ms
 const POLL_TIMEOUT = 1500 // ms
 
-const SERVER_URL = 'https://starship-server.herokuapp.com'
+// const SERVER_URL = 'https://starship-server.herokuapp.com'
+const SERVER_URL = 'http://localhost:9000'
+
+
+type timestamp = number
+type seconds = number
+
+type Port = {
+  wire: ?number,
+  isOnline: boolean,
+}
+
+type Bay = Array<Port>
+
+type Weapon = {
+  name: string,
+  sequence: *,
+  duration: seconds,
+}
+
+type AppState = {
+  bays: Array<Bay>,
+  enemies: *,
+  weaponStartTime: ?timestamp,
+  weapon: ?Weapon,
+  gameOver: boolean,
+  score: number,
+}
 
 const fetchServer = path => {
   function timeout(ms, promise) {
@@ -27,14 +54,14 @@ const fetchServer = path => {
   })
 }
 
-type PortProps = {
+type PortIndicatorProps = {
   wire: number,
   isOnline: boolean,
   cycleWire: any,
   disconnectWire: any,
 }
 
-function Port(props: PortProps) {
+function PortIndicator(props: PortIndicatorProps) {
   const wireColor = (props.wire === null) ? 'none' : WIRE_COLORS[props.wire]
   const isOnline = props.isOnline
   return (
@@ -48,9 +75,49 @@ function Port(props: PortProps) {
   )
 }
 
-type AppState = {
-  bays: Array<Array<{wire: number, isOnline: boolean}>>,
-  combos: Array<string>,
+type WeaponStatusProps = {
+  weapon: ?Weapon,
+  weaponStartTime: ?timestamp,
+}
+
+function didWeaponTimeExpire(weapon: Weapon, weaponStartTime: timestamp): boolean {
+  const millisRemaining = Date.now() - weaponStartTime
+  return millisRemaining > weapon.duration * 1000
+}
+
+function weaponTimeRemainingPercent(weapon: Weapon, weaponStartTime: timestamp): number {
+  const millisRemaining = Date.now() - weaponStartTime
+  const weaponDurationMillis = weapon.duration * 1000
+  return 1 - (millisRemaining / weaponDurationMillis)
+}
+
+function weaponTimeRemainingSeconds(weapon: Weapon, weaponStartTime: timestamp): number {
+  const millisRemaining = Date.now() - weaponStartTime
+  const weaponDurationMillis = weapon.duration * 1000
+  return (weaponDurationMillis - millisRemaining) / 1000
+}
+
+function WeaponStatus(props: WeaponStatusProps) {
+  const {weapon, weaponStartTime} = props
+  if (weapon && weaponStartTime && !didWeaponTimeExpire(weapon, weaponStartTime)) {
+    const weaponTimePercent = weaponTimeRemainingPercent(weapon, weaponStartTime)
+    const weaponTimeSeconds = weaponTimeRemainingSeconds(weapon, weaponStartTime)
+    return (
+      <div className="WeaponStatus">
+        <div className="WeaponStatus-name">{weapon.name}</div>
+        <div
+          className="WeaponStatus-duration"
+          style={{width: 400 * weaponTimePercent}}>
+          {weaponTimeSeconds.toFixed(1)}
+        </div>
+      </div>
+    )
+  } else {
+    return (
+      <div className="WeaponStatus">WEAPON OFFLINE</div>
+    )
+  }
+
 }
 
 class App extends React.Component<{}, AppState> {
@@ -93,7 +160,7 @@ class App extends React.Component<{}, AppState> {
     if (!this.state) return "loading"
     return (
       <div className="App">
-        <div className="Combos">{this.state.combos}</div>
+        <WeaponStatus weaponStartTime={this.state.weaponStartTime} weapon={this.state.weapon}/>
         <div className="Bays">
           {
             this.state.bays.map((ports: Array<any>, bayNum) => (
@@ -101,7 +168,7 @@ class App extends React.Component<{}, AppState> {
                 <div className="Bay-name">{`Bay ${bayNum}`}</div>
                 {
                   ports.map((attrs: {wire: number, isOnline: boolean}, portNum) => (
-                    <Port
+                    <PortIndicator
                       key={portNum}
                       cycleWire={() => this.cycleWire(portNum, bayNum)}
                       disconnectWire={() => this.disconnectWire(portNum, bayNum)}
